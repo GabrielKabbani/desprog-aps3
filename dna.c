@@ -23,10 +23,25 @@ int mlcs_w(char a[], int n, char b[], int m, int length[MAX_SIZE+1][MAX_SIZE+1])
         return 0;
     }
     if (a[n-1]==b[m-1]){
-        length[n][m]=mlcs_w(a,n-1,b,m-1,length)+1;
+        if (length[n-1][m-1]!=-1){
+            length[n][m]=length[n-1][m-1]+1;
+        }else{
+            length[n][m]=mlcs_w(a,n-1,b,m-1,length)+1;
+        }
     }else{
-        int i=mlcs_w(a, n-1, b, m, length);
-        int x=mlcs_w(a, n, b, m-1, length);
+        int i;
+        int x;
+        if (length[n][m-1]!=-1){
+            i=length[n][m-1];
+        }else{
+            i=mlcs_w(a, n, b, m-1, length);
+        }
+        if (length[n-1][m]!=-1){
+            x=length[n-1][m];
+        }else{
+            x=mlcs_w(a, n-1, b, m, length);
+        }
+    
         if (i>x){
             length[n][m]=i;
         }else{
@@ -50,11 +65,14 @@ int mlcs(char a[], int n, char b[], int m) {
 
 
 int dlcs(char a[], int n, char b[], int m) {
-    int length[MAX_SIZE+1][MAX_SIZE+1];
-
-    for (int i=0; i<n; i++){
-        for (int j=0; j<m; j++){
-            // printf("passou aqui");
+    int length[n+1][m+1];
+    for (int i=0; i<n+1; i++){
+        for (int j=0; j<m+1; j++){
+            length[i][j]=-1;
+        }
+    }
+    for (int i=0; i<=n; i++){
+        for (int j=0; j<=m; j++){
             if ((i==0) || (j==0)){
                 length[i][j]=0;
             }
@@ -71,10 +89,6 @@ int dlcs(char a[], int n, char b[], int m) {
             }
         }
     }
-
-
-
-
-
     return length[n][m];
+
 }
